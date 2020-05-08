@@ -19,27 +19,33 @@ Return true if and only if the nodes corresponding to the values x and y are cou
  *     int val;
  *     TreeNode left;
  *     TreeNode right;
- *     TreeNode(int x) { val = x; }
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
  * }
  */
 class Solution {
-   Map<Integer, Integer> depth;
-   Map<Integer, TreeNode> parent;
-
+    Map<Integer,Integer> parentMap = new HashMap<>();
+    Map<Integer,Integer> depthMap = new HashMap<>();
+    
     public boolean isCousins(TreeNode root, int x, int y) {
-        depth = new HashMap();
-        parent = new HashMap();
-        dfs(root, null);
-        return (depth.get(x) == depth.get(y) && parent.get(x) != parent.get(y));
+        if(root == null)
+            return false;
+        dfs(root, null, 0);
+        return (parentMap.get(x) != parentMap.get(y)) && (depthMap.get(x) == depthMap.get(y));
     }
-
-    public void dfs(TreeNode node, TreeNode parentNode) {
-        if (node != null) {
-            depth.put(node.val, parentNode != null ? 1 + depth.get(parentNode.val) : 0);
-            parent.put(node.val, parentNode);
-            dfs(node.left, node);
-            dfs(node.right, node);
-        }
+    
+    private void dfs(TreeNode node, TreeNode parent, int depth) {
+        parentMap.put(node.val, parent == null ? null : parent.val);
+        depthMap.put(node.val, depth);
+        if(node.left != null)
+            dfs(node.left, node, depth+1);
+        if(node.right != null)
+            dfs(node.right, node, depth+1);
     }
 }
 ```
