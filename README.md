@@ -49,3 +49,32 @@ class Solution {
     }
 }
 ```
+
+## Implementation 2:
+```java
+class Solution {
+    public boolean isCousins(TreeNode root, int x, int y) {
+        if(root == null)
+            return false;
+        Map<Integer, Integer> depthMap = new HashMap<>();
+        Map<Integer, Integer> parentMap = new HashMap<>();
+        depthMap.put(root.val, 0); parentMap.put(root.val, Integer.MIN_VALUE);
+        traverseTree(root, depthMap, parentMap, 0);
+        return depthMap.get(x) == depthMap.get(y) && parentMap.get(x) != parentMap.get(y);
+    }
+    
+    private void traverseTree(TreeNode node, Map<Integer, Integer> depthMap, 
+                              Map<Integer, Integer> parentMap, int depth) {
+        if(node.left != null) {
+            depthMap.put(node.left.val, depth+1);
+            parentMap.put(node.left.val, node.val);
+            traverseTree(node.left, depthMap, parentMap, depth+1);
+        }
+        if(node.right != null) {
+            depthMap.put(node.right.val, depth+1);
+            parentMap.put(node.right.val, node.val);
+            traverseTree(node.right, depthMap, parentMap, depth+1);
+        }
+    }
+}
+```
